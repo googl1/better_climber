@@ -1,118 +1,44 @@
-import './exTile.dart';
-import 'package:flutter/material.dart';
-import './help.dart';
-import './profile.dart';
+import './week.dart';
+import './exercise.dart';
 
-class _PhaseState extends State<Phase> {
-  Help help;
-  Profile profile;
-
-  @override
-  _PhaseState(Profile profile)
-  {
-    this.profile = profile;
-    help = new Help();
-  }
-
-  AlertDialog firstStart(BuildContext context) {
-    return new AlertDialog(
-      title: new Text('Hi!'),
-      content: new SingleChildScrollView(
-        child: new ListBody(
-          children: <Widget>[
-            new Text("""This is BetterClimber, a gamified version of
-Neil Greshams\'s article in Rock & Ice:
-A one-year-long training plan to become a better climber."""),
-            new Text("""You can start now with the first week of training."""),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        new FlatButton(
-          child: new Text('Start with phase 1'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              new MaterialPageRoute(builder: (context) => new Phase(profile)),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Phase 1 - Conditioning"),
-      ),
-      body: new Builder(
-        // Create an inner BuildContext so that the onPressed methods
-        // can refer to the Scaffold with Scaffold.of().
-          builder: (BuildContext context) {
-            return new Column(
-              children: [
-                new SizedBox(
-                  child: new Card(
-                    child: new Column(
-                      children: [
-                        new ExTile(profile, 0, "Aerobic / anaerobic conditioning & flexibility",
-                            "Running, Burpees and Stretching (60min):",
-                            help.text1, 2, context),
-                        new Divider(),
-                        new ExTile(profile, 1, "Low-intensity endurance",
-                            "Either lead or bouldering (80min)", help.text2, 2, context),
-                        new Divider(),
-                        new ExTile(profile, 2, "Bouldering – volume / easy problems:",
-                            "Bouldering (80min):", help.text3, 2,
-                            context),
-                        new Divider(),
-                        new ExTile(profile, 3, "Antagonists & core",
-                            "Strength exercizes (60min):", help.text4, 2, context),
-                      ],
-                    ),
-                  ),
-                ),
-                new Opacity(
-                  opacity: 0.2,
-                  child: new SizedBox(
-                    child: new Card(
-                      child: new Column(
-                        children: [
-                          new ExTile(profile, 0, "Aerobic / anaerobic conditioning & flexibility",
-                              "Running, Burpees and Stretching (60min):",
-                              help.text1, 2, context),
-                          new Divider(),
-                          new ExTile(profile, 1, "Low-intensity endurance",
-                              "Either lead or bouldering (80min)", help.text2, 2, context),
-                          new Divider(),
-                          new ExTile(profile, 2, "Bouldering – volume / easy problems:",
-                              "Bouldering (80min):", help.text3, 2,
-                              context),
-                          new Divider(),
-                          new ExTile(profile, 3, "Antagonists & core",
-                              "Strength exercizes (60min):", help.text4, 2, context),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-      ),
-    );
-  }
-}
-
-class Phase extends StatefulWidget {
-  Profile profile;
+class Phase {
+  List<Week> weeks;
+  int num_weeks;
+  String title;
 
   @override
-  Phase(Profile profile) {
-    this.profile = profile;
-  }
+  Phase(int num) {
+    if (num == 1) {
+      this.title = "Phase 1 - Conditioning";
 
-  @override
-  _PhaseState createState() => new _PhaseState(profile);
+      this.weeks = new List();
+
+      List<Exercise> week1and2_exercises = new List();
+      week1and2_exercises.add(new Exercise(4, "aerobic", 0));
+      week1and2_exercises.add(new Exercise(1, "endurance", 1));
+      week1and2_exercises.add(new Exercise(1, "volume", 2));
+      week1and2_exercises.add(new Exercise(3, "antagonists", 3));
+
+      List<Exercise> week3and4_exercises = new List();
+      week3and4_exercises.add(new Exercise(4, "aerobic", 0));
+      week3and4_exercises.add(new Exercise(2, "endurance", 1));
+      week3and4_exercises.add(new Exercise(1, "volume", 2));
+      week3and4_exercises.add(new Exercise(3, "antagonists", 3));
+
+      List<Exercise> week5and6_exercises = new List();
+      week5and6_exercises.add(new Exercise(3, "aerobic", 0));
+      week5and6_exercises.add(new Exercise(3, "endurance", 1));
+      week5and6_exercises.add(new Exercise(1, "volume", 2));
+      week5and6_exercises.add(new Exercise(3, "antagonists", 3));
+
+      weeks.add(new Week(week1and2_exercises));
+      weeks.add(new Week(week1and2_exercises));
+      weeks.add(new Week(week3and4_exercises));
+      weeks.add(new Week(week3and4_exercises));
+      weeks.add(new Week(week5and6_exercises));
+      weeks.add(new Week(week5and6_exercises));
+
+      this.num_weeks = weeks.length;
+    }
+  }
 }

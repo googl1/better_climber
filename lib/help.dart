@@ -1,5 +1,5 @@
 class Help {
-  String text1 = """a) Run [ 30 minutes ]
+  String aerobic = """a) Run [ 30 minutes ]
 
 Running is preferable to cycling in order to avoid bulking up the leg muscles. Go at a slow steady pace to warm-up for the first 5 minutes. Then do 5 intervals of 1 min. on at 90 to 95 percent effort followed by 1 min. slow jog to recover. Then run at a steady pace to finish. Each session make the intervals 10 seconds longer, until eventually you are doing 2 mins. on / 1 min. off x 5, then 5 mins. to warm down.
 
@@ -28,7 +28,7 @@ Hold stretches for 20 seconds, release for 10 seconds, then repeat again for 20 
 
 8. Forearms (flexors & extensors)""";
 
-  String text2 = """You have two options: one for the bouldering wall and one for the lead wall. Don’t do both in one session! Warm up first.
+  String endurance = """You have two options: one for the bouldering wall and one for the lead wall. Don’t do both in one session! Warm up first.
 
 a) Routes: 4 x 4s
 
@@ -52,7 +52,7 @@ Remember that injuries can still strike at any time, so it’s vital to warm up 
 
 You don’t need to be a slave to the plan. It’s fine to swap sessions around and substitute training indoors with climbing outside at any opportunity.""";
 
-  String text3 = """Climb problems in ascending/descending grade order. Rest 1 minute between problems at first two levels. Rest 2 minutes between harder grades. Aim to do one more problem at each grade with each session.
+  String volume = """Climb problems in ascending/descending grade order. Rest 1 minute between problems at first two levels. Rest 2 minutes between harder grades. Aim to do one more problem at each grade with each session.
 
 [ Beginner / Low intermediate ] 5 x V0;  5 x V1;  5 x V2;  5 x V1;  5 x VO
 
@@ -62,7 +62,7 @@ You don’t need to be a slave to the plan. It’s fine to swap sessions around 
 
 [ Elite ] 3 x V2; 3 x V3; 3 x V4; 3 x V5; 3 x V6; 3 x V7; 3 x V6; 3 x V5; 3 x V4; 3 x V3; 3 x V2""";
 
-  String text4 = """a) Antagonists
+  String antagonists = """a) Antagonists
 
 Do 3 sets of 20 reps of the following exercises with 2 minutes of rest between sets. Don’t go to failure (or, optional, go to failure on last set).
 

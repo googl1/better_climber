@@ -1,80 +1,101 @@
 import 'package:flutter/material.dart';
 import './profile.dart';
+import './exercise.dart';
 
 class ExTile extends StatefulWidget {
-  String label;
+  Exercise exercise;
   BuildContext context;
-  String helpTitle;
-  String help;
-  int of;
   Profile profile;
-  int num;
+  bool active;
+  int week;
 
   @override
   _ExTileState createState() =>
-      new _ExTileState(profile, num, label, helpTitle, help, of, context);
+      new _ExTileState(this.profile, this.exercise, this.context, this.active, this.week);
 
   @override
-  ExTile(Profile profile, int num, String label, String helpTitle, String help, int of,
-      BuildContext context) {
+  ExTile(Profile profile, Exercise exercise,
+      BuildContext context, bool active, int week) {
     this.profile = profile;
-    this.num = num;
-    this.label = label;
     this.context = context;
-    this.helpTitle = helpTitle;
-    this.help = help;
-    this.of = of;
+    this.exercise = exercise;
+    this.active = active;
+    this.week = week;
   }
 }
 
 class _ExTileState extends State<ExTile> {
-  String _label;          // the name of the tile
   BuildContext _context;  // FIXME: really needed?
-  String _helpTitle;      // FIXME: is this displayed?
-  String _help;           // shown when help button tapped
-  int _of;                // how many do i have to do of those exercises?
-  int exNumber;           // identifies exercise number in the week
   Profile profile;        // contains info on how much of what is done and has to be done
+  Exercise exercise;            // data on the exercise
+  bool active;
+  int week;
 
   @override
-  _ExTileState(Profile profile, int num, String label, String helpTitle, String help, int of,
-      BuildContext context) {
+  _ExTileState(Profile profile, Exercise exercise, BuildContext context, bool active, int week) {
     this.profile = profile;
-    this._label = label;
     this._context = context;
-    this._helpTitle = helpTitle;
-    this._help = help;
-    this._of = of;
-    this.exNumber = num;
+    this.exercise = exercise;
+    this.active = active;
+    this.week = week;
+
+    if (this.profile.exercise[exercise.number] >= exercise.total)
+      this.active = false;
   }
 
   void _handleTap() {
-    profile.exDone(exNumber);
+      setState(() {
+        profile.exDone(exercise.number);
+        if (this.profile.exercise[exercise.number] >= exercise.total)
+          profile.weekDone();
+      });
+
+  }
+
+  void _showHelp() {
+      showDialog(
+          context: this.context,
+          child: new SimpleDialog(
+              title: new Text(this.exercise.helpTitle),
+              contentPadding: new EdgeInsets.all(32.0),
+              children: [
+                new Text(this.exercise.help),
+              ]));
   }
 
   @override
   Widget build(BuildContext context) {
-    Color color = Theme.of(context).primaryColor;
+    int num_done;
+    if (this.active)
+      num_done = this.profile.exercise[exercise.number];
+    else
+      num_done = 0;
+    Widget leading;
+
+    if (this.week != profile.week) {
+      leading = new Icon(Icons.block);
+      this.active = false;
+    }
+    else if (this.profile.exercise[exercise.number] >= exercise.total) {
+      leading = new Icon(Icons.check, color: Colors.green);
+      this.active = false;
+    }
+    else
+      leading = new Text(this.profile.exercise[exercise.number].toString() + '/'
+          + this.exercise.total.toString());
 
     return new ListTile(
-      title: new Text(this._label,
+      title: new Text(this.exercise.name,
           style: new TextStyle(fontWeight: FontWeight.w500)),
       onTap: _handleTap,
-      leading: new Text(this.profile.exercise[exNumber].toString() + '/' + this._of.toString()),
+      leading: leading,
       trailing: new IconButton(
         icon: new Icon(Icons.help),
         tooltip: 'Details',
-        onPressed: () {
-          showDialog(
-              context: context,
-              child: new SimpleDialog(
-                  title: new Text(this._helpTitle),
-                  contentPadding: new EdgeInsets.all(32.0),
-                  children: [
-                    new Text(this._help),
-                  ]));
-        },
+        onPressed: _showHelp
       ),
+
+      enabled: this.active,
     );
   }
 }
