@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './profile.dart';
-import './phases.dart';
+import './phaseView.dart';
+import './phase.dart';
 
 Profile profile;
 
@@ -10,7 +11,7 @@ void main() async{
 
   runApp(new MaterialApp(
     title: 'BetterClimber',
-    home: new Phases(profile),
+    home: new PhaseView(profile),
     theme: new ThemeData(
       primarySwatch: Colors.pink,
     ),

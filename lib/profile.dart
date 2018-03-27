@@ -1,17 +1,28 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import './phase.dart';
+import 'package:collection/collection.dart';
+import './phaseView.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
 class Profile {
-  int phase;
+  Phase phase;
+  int num_phase;
   int week;
   var exercise;
   bool isFirstTime;
   int exLen;
+  SharedPreferences prefs;
+  Function _equal;
+
+  @override
+  Profile() {
+    _equal = const ListEquality().equals;
+  }
 
   loadProfile() async
   {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
 
     this.exercise = [0,0,0,0];
 
@@ -21,13 +32,13 @@ class Profile {
     if (isFirstTime == null)
       isFirstTime = true;
     if (isFirstTime) {
-      this.phase = 1;
+      this.num_phase = 1;
       this.week = 1;
       this.exLen = 4;
       this.exercise = [0,0,0,0];
-      this.isFirstTime = false;
+      //this.isFirstTime = false;
       prefs.setBool('isFirstTime', false);
-      prefs.setInt('phase', this.phase);
+      prefs.setInt('phase', this.num_phase);
       prefs.setInt('week', this.week);
       prefs.setInt('exLen', exLen);
       for (var i = 0; i < this.exLen; i++) {
@@ -35,7 +46,7 @@ class Profile {
       }
     }
     else {
-        this.phase = await prefs.getInt('phase');
+        this.num_phase = await prefs.getInt('phase');
         this.week = await prefs.getInt('week');
         this.exLen = await prefs.getInt('exLen');
 
@@ -43,26 +54,46 @@ class Profile {
           this.exercise[i] = await prefs.get('ex${i}');
         }
     }
+    this.phase = new Phase(num_phase);
   }
 
-  exDone(int which) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-      this.exercise[which] = prefs.getInt('ex${which}') + 1;
-
+  exDone(int which, PhaseViewState phaseState) async {
+    this.exercise[which]++;
     prefs.setInt('ex${which}', this.exercise[which]);
+
+    if (_equal(this.exercise, phase.weeks[this.week - 1].todo)) {
+      await this.weekDone();
+      phaseState.change();
+    }
   }
 
   weekDone() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    this.week = prefs.getInt('week') + 1;
+    this.week++;
+
+    print("week:${week} of ${phase.num_weeks}");
+    if (this.week > phase.num_weeks) {
+      await this.phaseDone();
+      this.week = 1;
+
+    }
 
     prefs.setInt('week', this.week);
+
+    this.exLen = this.phase.weeks[this.week - 1].num_ex;
+    this.exercise = new List(this.exLen);
+    for (var i = 0; i < this.exLen; i++) {
+      this.exercise[i] = 0;
+    }
+    prefs.setInt('exLen', exLen);
+    for (var i = 0; i < this.exLen; i++) {
+      await prefs.setInt('ex${i}', exercise[i]);
+    }
   }
 
   phaseDone() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    this.phase = prefs.getInt('phase') + 1;
-
-    prefs.setInt('phase', this.phase);
+    print("phaseDone");
+    this.num_phase++;
+    prefs.setInt('phase', this.num_phase);
+    this.phase = new Phase(num_phase);
   }
 }
